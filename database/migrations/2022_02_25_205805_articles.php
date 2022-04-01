@@ -20,6 +20,7 @@ class Articles extends Migration
             $table->string("image");
             $table->longText("content");
             $table->integer("hit")->default(0);
+            $table->integer("status")->default(0);
             $table->string("slug");
             $table->timestamps();
             $table->foreign("category_id")->references("id")->on("categories");
