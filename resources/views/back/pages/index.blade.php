@@ -9,19 +9,24 @@
         </h6>
     </div>
     <div class="card-body">
+        <div id="orderSuccess" style="display: none" class="alert alert-success">
+            Sıralama başarıyla güncellendi
+        </div>
         <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
+                        <th>Sıralama</th>
                         <th>Görsel</th>
                         <th>Başlık</th>
                         <th>Durum</th>
                         <th>İşlemler</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="orders">
                     @foreach ($pages as $page)
-                    <tr>
+                    <tr id="page_{{$page->id}}">
+                        <td class="text-center" style="width: 3%"><i class="fa fa-arrows-alt-v fa-2x handle" style="cursor:move;"></i></td>
                         <td><img src="{{$page->image}}" width="200" alt=""></td>
                         <td>{{$page->title}}</td>
                         <td>
@@ -44,6 +49,19 @@
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 @endsection
 @section('js')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js" integrity="sha512-Eezs+g9Lq4TCCq0wae01s9PuNWzHYoCMkE97e2qdkYthpI0pzC3UGB03lgEHn2XM85hDOUF6qgqqszs+iXU4UA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script>
+        $('#orders').sortable({
+            handle: '.handle',
+            update:function(){
+                var siralama = $('#orders').sortable('serialize');
+                $.get("{{route('admin.page.orders')}}?"+siralama,function(data,status){
+                    $("#orderSuccess").show().delay(2000).fadeOut();
+                });
+            }
+        });
+    </script>
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     <script>
         $(function(){

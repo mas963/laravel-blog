@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use \Illuminate\Validation\Validator;
+use Illuminate\Support\Facades\Mail;
 
 // Models
 use App\Models\Article;
@@ -61,6 +62,17 @@ class Homepage extends Controller
             "topic"=>"required",
             "message"=>"required|min:10"
         ]);
+
+        Mail::send([],[], function($message) use($request){
+            $message->from('iletisim@blogsitesi.com','Blog sitesi');
+            $message->to('masendgj7@gmail.com');
+            $message->setBody('Mesajı gönderen: '.$request->name.'<br>
+            Mesajı gönderen mail: '.$request->email.'<br>
+            Mesaj konusu: '.$request->topic.'<br>
+            Mesaj: '.$request->message.'<br><br>
+            Mesaj gönderilme tarihi: '.now(),'text/html');
+            $message->subject($request->name. ' iletişimden mesaj gönderildi');
+        });
         
         $contact = new Contact;
         $contact->name=$request->name;
