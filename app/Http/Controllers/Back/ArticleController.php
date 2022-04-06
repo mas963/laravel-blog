@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Article;
 use App\Models\Category;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
+
 
 class ArticleController extends Controller
 {
@@ -54,7 +56,7 @@ class ArticleController extends Controller
         if($request->hasFile('image')){
             $imageName=Str::slug($request->title).'.'.$request->image->getClientOriginalExtension();
             $request->image->move(public_path('uploads'),$imageName);
-            $article->image='http://127.0.0.1:8000/uploads/'.$imageName;
+            $article->image='/uploads/'.$imageName;
         }
         $article->save();
         toastr()->success('Başarılı', 'Makale başarıyla oluşturuldu');
@@ -108,7 +110,7 @@ class ArticleController extends Controller
         if($request->hasFile('image')){
             $imageName=Str::slug($request->title).'.'.$request->image->getClientOriginalExtension();
             $request->image->move(public_path('uploads'),$imageName);
-            $article->image='http://127.0.0.1:8000/uploads/'.$imageName;
+            $article->image='/uploads/'.$imageName;
         }
         $article->save();
         toastr()->success('Makale başarıyla düzenlendi');
@@ -127,6 +129,34 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function delete($id){
+        Article::find($id)->delete();
+        toastr()->success('Makale geri dönüşüm kutuna taşındı');
+        return redirect()->route('admin.makaleler.index');
+    }
+
+    public function trashed(){
+        $articles = Article::onlyTrashed()->orderBy('deleted_at','desc')->get();
+        return view('back.articles.trashed',compact('articles'));
+    }
+
+    public function recover($id){
+        Article::onlyTrashed()->find($id)->restore();
+        toastr()->success('Makale geri çağırıldı');
+        return redirect()->back();
+    }
+
+    public function hardDelete($id){
+        $article = Article::onlyTrashed()->find($id);
+        $imgpath = ltrim($article->image,"/");
+        if(File::exists($imgpath)){
+            File::delete(public_path($imgpath));
+        }
+        $article->forceDelete();
+        toastr()->success('Makale başarıyla silindi');
+        return redirect()->back();
+    }
+
     public function destroy($id)
     {
         //

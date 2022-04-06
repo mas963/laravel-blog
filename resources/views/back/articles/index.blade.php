@@ -3,7 +3,10 @@
 @section('content')
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary"><strong>{{$articles->count()}}</strong> makale bulundu</h6>
+        <h6 class="m-0 font-weight-bold text-primary">
+            <strong>{{$articles->count()}}</strong> makale bulundu
+            <span class="float-right"><a href="{{route('admin.trashed.article')}}" class="btn btn-warning btn-sm"><i class="fa fa-trash"></i> Geri dönüşüm</a></span>
+        </h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -31,9 +34,9 @@
                             <input class="switch" article-id="{{$article->id}}" type="checkbox" data-on="Aktif" data-off="Pasif" data-offstyle="danger" @if($article->status==1) checked @endif data-toggle="toggle">
                         </td>
                         <td>
-                            <a href="#" title="Görüntüle" class="btn btn-sm btn-success"><li class="fa fa-eye"></li></a>
+                            <a target="_blank" href="{{route('single',[$article->getCategory->slug,$article->slug])}}" title="Görüntüle" class="btn btn-sm btn-success"><li class="fa fa-eye"></li></a>
                             <a href="{{route('admin.makaleler.edit',$article->id)}}" title="Düzenle" class="btn btn-sm btn-primary"><li class="fa fa-pen"></li></a>
-                            <a href="#" title="Sil" class="btn btn-sm btn-danger"><li class="fa fa-times"></li></a>
+                            <a href="{{route('admin.delete.article',$article->id)}}" title="Sil" class="btn btn-sm btn-warning"><li class="fa fa-trash"></li></a>
                         </td>
                     </tr>
                     @endforeach
