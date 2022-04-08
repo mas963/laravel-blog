@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Route;
 | Backend Routes
 |--------------------------------------------------------------------------
 */
+Route::get('aktif-degil',function(){
+    return view('front.offline');
+});
 
 Route::prefix('admin')->name('admin.')->middleware('isLogin')->group(function(){
     Route::get('giris', 'App\Http\Controllers\Back\AuthController@login')->name('login');
@@ -40,7 +43,10 @@ Route::prefix('admin')->name('admin.')->middleware('isAdmin')->group(function(){
     Route::get('/harddeletepage/{id}', 'App\Http\Controllers\Back\PageController@hardDelete')->name('hard.delete.page');
     Route::get('/recoverpage/{id}', 'App\Http\Controllers\Back\PageController@recover')->name('recover.page');
     Route::get('/sayfa/siralama', 'App\Http\Controllers\Back\PageController@orders')->name('page.orders');
-    // cikis
+    // config route's
+    Route::get('/ayarlar', 'App\Http\Controllers\Back\ConfigController@index')->name('config.index');
+    Route::post('/ayarlar/update', 'App\Http\Controllers\Back\ConfigController@update')->name('config.update');
+    //
     Route::get('cikis', 'App\Http\Controllers\Back\AuthController@logout')->name('logout');
 });
 
