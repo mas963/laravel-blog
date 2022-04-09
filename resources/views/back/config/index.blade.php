@@ -31,13 +31,15 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Site logo</label>
-                        <input type="file" class="form-control" name="logo">
+                        <input type="file" class="form-control-file" name="logo"><br>
+                        <img src="{{asset($config->logo)}}" alt="" width="150">
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Site favicon</label>
-                        <input type="file" class="form-control" name="favicon">
+                        <input type="file" class="form-control-file" name="favicon"><br>
+                        <img src="{{asset($config->favicon)}}" alt="" width="50">
                     </div>
                 </div>
             </div>

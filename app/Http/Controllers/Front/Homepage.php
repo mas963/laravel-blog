@@ -16,18 +16,19 @@ use App\Models\Config;
 
 class Homepage extends Controller
 {
-    public function __construct()
-    {
+    public function __construct(){
         if (Config::find(1)->active == 0) {
             return redirect()->to('aktif-degil')->send();
         }
-        view()->share("pages",Page::orderBy("order","ASC")->get());
-        view()->share("categories", Category::inRandomOrder()->get());
+        view()->share("pages",Page::where('status',1)->orderBy("order","ASC")->get());
+        view()->share("categories", Category::where('status',1)->inRandomOrder()->get());
+        view()->share('config',Config::find(1));
     }
-    public function index()
-    
-    {
-        $data['articles'] = Article::orderBy('created_at','DESC')->paginate(2);
+
+    public function index(){
+        $data['articles'] = Article::with('getCategory')->where('status',1)->whereHas('getCategory',function($query){
+            $query->where('status',1);
+        })->orderBy('created_at','DESC')->paginate(3);
         $data['articles'] -> withPath(url('sayfa'));
         return view('front.homepage', $data);
     }
@@ -43,12 +44,12 @@ class Homepage extends Controller
     public function category($slug){
         $category = Category::whereSlug($slug)->first() ?? abort(404);
         $data['category'] = $category;
-        $data['articles'] = Article::whereCategoryId($category->id)->orderBy('created_at','DESC')->paginate(1);
+        $data['articles'] = Article::where('category_id',$category->id)->where('status',1)->orderBy('created_at','DESC')->paginate(1);
         return view('front.category', $data);
     }
 
     public function page($slug){
-        $page = Page::whereSlug($slug)->first() ?? abort(403,'böyle bir sayfa bulunamadı');
+        $page = Page::where('status',1)->whereSlug($slug)->first() ?? abort(403,'böyle bir sayfa bulunamadı');
         $data['page'] = $page;
         return view('front.page',$data);
     }
