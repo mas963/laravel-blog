@@ -8,7 +8,7 @@
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-                <div class="sidebar-brand-text"><img src="{{asset($config->logo)}}" width="150"><br>kontrol paneli</div>
+                <div class="sidebar-brand-text"><img src="" width="150"><br>kontrol paneli</div>
             </a>
 
             <!-- Divider -->
